@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import { Button, Spinner } from "@nextui-org/react";
 import { StlViewer } from "react-stl-viewer";
+// import { StlViewer } from "react-stl-file-viewer";
 import { useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
@@ -12,6 +13,7 @@ const url1 =
   "https://storage.googleapis.com/ucloud-v3/ccab50f18fb14c91ccca300a.stl";
 //bg-[#151b2b]
 function App() {
+  const [dis, setDis] = useState(true);
   const [status, setStatus] = useState("1"); // "" | "1" | "2" | "3" | "4"
   const [stdlUrl, setStdlUrl] = useState("http://localhost:5000/first");
   const { data, isLoading, refetch, isSuccess } = useQuery({
@@ -22,6 +24,7 @@ function App() {
       return data;
     },
   });
+  const [volume, setvolume] = useState(0);
 
   function setStdlUrlf(witch) {
     if (witch === "1") {
@@ -118,9 +121,15 @@ function App() {
         </div>
       </div>
       {/* Main */}
-      <div className="flex-1 flex relative">
+      <div className="flex-1 flex relative flex-col items-center">
         <div className="w-full flex justify-center">
-          <p className="font-bold text-2xl mt-5 text-slate-800">
+          <p
+            className="font-bold text-2xl mt-5 text-slate-800"
+            onClick={() => {
+              console.log(dis);
+              setDis((prev) => !prev);
+            }}
+          >
             {status == "1"
               ? "First"
               : status == "2"
@@ -131,21 +140,42 @@ function App() {
             file
           </p>
         </div>
-        <StlViewer
-          style={{
-            top: 0,
-            left: 0,
-            width: "83vw",
-            height: "100vh",
-            position: "absolute",
-            right: 0,
-            bottom: 0,
-          }}
-          orbitControls
-          shadows
-          canvasId={stdlUrl}
-          url={stdlUrl}
-        />
+        {/* <div>
+          <StlViewer
+            width={900}
+            height={700}
+            url={stdlUrl}
+            // url={file}
+            groundColor="rgb(255, 255, 255)"
+            objectColor="rgb(137, 137, 137)"
+            skyboxColor="rgb(255, 255, 255)"
+            gridLineColor="rgb(0, 0, 0)"
+            lightColor="rgb(255, 255, 255)"
+            volume={setvolume}
+          />
+          {`Volume: ${volume}`}
+        </div> */}
+        <div className="w-[60%] flex items-center justify-center absolute h-screen">
+          <StlViewer
+            style={{
+              top: 0,
+              left: 0,
+              width: "60vw",
+              height:"90vh",
+              right: 0,
+              bottom: 0,
+              display: dis ? "block" : "none",
+            }}
+            orbitControls
+            shadows
+            canvasId={stdlUrl}
+            url={stdlUrl}
+            // onFinishLoading={() => {
+            //   toast.success("lodede");
+            //   setDis(true);
+            // }}
+          />
+        </div>
       </div>
     </div>
   );
