@@ -12,7 +12,7 @@ const url1 =
   "https://storage.googleapis.com/ucloud-v3/ccab50f18fb14c91ccca300a.stl";
 //bg-[#151b2b]
 function App() {
-  const [status, setStatus] = useState(""); // "" | "1" | "2" | "3" | "4"
+  const [status, setStatus] = useState("1"); // "" | "1" | "2" | "3" | "4"
   const [stdlUrl, setStdlUrl] = useState("http://localhost:5000/first");
   const { data, isLoading, refetch, isSuccess } = useQuery({
     queryKey: ["start"],
@@ -55,7 +55,7 @@ function App() {
   }
   return (
     <div className="w-full flex ">
-      <button onClick={logg}>logg</button>
+      {/* <button onClick={logg}>logg</button> */}
       {/* Side Bar */}
       <div className="w-[17%] justify-center border-r-2 border-black h-screen py-5 px-2 flex flex-col ">
         <div className="flex items-center justify-center flex-col 2xl:gap-y-16 xl:gap-y-14 md:gap-10 gap-7">
@@ -64,7 +64,11 @@ function App() {
             variant="shadow"
             className="w-[35%] text-white text-lg font-semibold"
             onClick={() => {
-              setStdlUrlf("1");
+              if (status !== "1") {
+                setStdlUrlf("1");
+              } else {
+                toast.error("you courently seeing first file");
+              }
             }}
           >
             First
@@ -73,6 +77,13 @@ function App() {
             color="success"
             variant="shadow"
             className="w-[35%] text-white text-lg font-semibold"
+            onClick={() => {
+              if (status !== "2") {
+                setStdlUrlf("2");
+              } else {
+                toast.error("you courently seeing second file");
+              }
+            }}
           >
             Seconed
           </Button>
@@ -80,6 +91,13 @@ function App() {
             color="secondary"
             variant="shadow"
             className="w-[35%] text-lg font-semibold"
+            onClick={() => {
+              if (status !== "3") {
+                setStdlUrlf("3");
+              } else {
+                toast.error("you courently seeing mesh file");
+              }
+            }}
           >
             Mesh
           </Button>
@@ -88,7 +106,11 @@ function App() {
             variant="shadow"
             className="w-[35%] text-lg font-semibold"
             onClick={() => {
-              setStdlUrlf("4");
+              if (status !== "4") {
+                setStdlUrlf("4");
+              } else {
+                toast.error("you courently seeing Large file");
+              }
             }}
           >
             Large
@@ -96,34 +118,34 @@ function App() {
         </div>
       </div>
       {/* Main */}
-      <div className="flex-1 flex">
-        {/* <p>{stdlUrl}</p> */}
-        {status == 1 ? (
-          <StlViewer
-            style={{
-              top: 0,
-              left: 0,
-              width: "83vw",
-              height: "100vh",
-            }}
-            orbitControls
-            shadows
-            canvasId={stdlUrl}
-            url={stdlUrl}
-          />
-        ) : (
-          <StlViewer
-            style={{
-              top: 0,
-              left: 0,
-              width: "83vw",
-              height: "100vh",
-            }}
-            orbitControls
-            shadows
-            url={stdlUrl}
-          />
-        )}
+      <div className="flex-1 flex relative">
+        <div className="w-full flex justify-center">
+          <p className="font-bold text-2xl mt-5 text-slate-800">
+            {status == "1"
+              ? "First"
+              : status == "2"
+              ? "second"
+              : status == "3"
+              ? "mesh"
+              : "Large"}{" "}
+            file
+          </p>
+        </div>
+        <StlViewer
+          style={{
+            top: 0,
+            left: 0,
+            width: "83vw",
+            height: "100vh",
+            position: "absolute",
+            right: 0,
+            bottom: 0,
+          }}
+          orbitControls
+          shadows
+          canvasId={stdlUrl}
+          url={stdlUrl}
+        />
       </div>
     </div>
   );
