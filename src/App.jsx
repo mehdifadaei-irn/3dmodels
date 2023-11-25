@@ -26,6 +26,8 @@ function App() {
   });
   const [volume, setvolume] = useState(0);
 
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
   function setStdlUrlf(witch) {
     if (witch === "1") {
       setStatus("1");
@@ -41,6 +43,11 @@ function App() {
       setStdlUrl("http://localhost:5000/large");
     }
   }
+  useEffect(() => {
+    if (!dis) {
+      setDis(true);
+    }
+  }, [status]);
 
   function logg() {
     console.log(stdlUrl);
@@ -124,7 +131,7 @@ function App() {
       <div className="flex-1 flex relative flex-col items-center">
         <div className="w-full flex justify-center">
           <p
-            className="font-bold text-2xl mt-5 text-slate-800"
+            className="font-bold text-2xl mt-5 text-slate-800 z-30"
             onClick={() => {
               console.log(dis);
               setDis((prev) => !prev);
@@ -155,25 +162,39 @@ function App() {
           />
           {`Volume: ${volume}`}
         </div> */}
-        <div className="w-[60%] flex items-center justify-center absolute h-screen">
+        <div className="w-[60%] flex items-center justify-center  relative h-screen">
+          {/* Wrapper */}
+          <div
+            className="w-[50rem] h-[20rem]  absolute z-20"
+            style={{
+              display: !dis ? "none" : "block",
+            }}
+          >
+            <div className="flex flex-row gap-x-3 justify-center items-center">
+              <h1 className="underline font-bold text-xl ">Waiting...</h1>
+              <Spinner />
+            </div>
+          </div>
           <StlViewer
             style={{
               top: 0,
               left: 0,
               width: "60vw",
-              height:"90vh",
+              height: "90vh",
               right: 0,
               bottom: 0,
-              display: dis ? "block" : "none",
+              opacity: !dis ? "1" : "0",
             }}
             orbitControls
             shadows
             canvasId={stdlUrl}
             url={stdlUrl}
-            // onFinishLoading={() => {
-            //   toast.success("lodede");
-            //   setDis(true);
-            // }}
+            onFinishLoading={async () => {
+              toast.success("lodede");
+              console.log("eee");
+              await delay(1000);
+              setDis(false);
+            }}
           />
         </div>
       </div>
