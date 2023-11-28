@@ -1,12 +1,16 @@
 import { useState } from "react";
 import "./App.css";
-import { Button, Spinner } from "@nextui-org/react";
+import { Button, Spinner, Input } from "@nextui-org/react";
 import { StlViewer } from "react-stl-viewer";
-// import { StlViewer } from "react-stl-file-viewer";
 import { useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
+
+import * as yup from "yup";
+import { useFormik } from "formik";
+import { inputNames } from "./configs/site";
+//number().positive().integer().required()
 
 const url = "http://localhost:5000/large";
 const url1 =
@@ -49,9 +53,85 @@ function App() {
     }
   }, [status]);
 
-  function logg() {
-    console.log(stdlUrl);
-  }
+  const { mutate } = useMutation({
+    mutationFn: async (values) => {
+      fetch("http://16.16.183.78/new-stator", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          out_dia: 265,
+          bore_dia: 192,
+          stack_height: 300,
+          slot_depth: 18.15,
+          slot_width: 3.6,
+          slot_opening: 1.5,
+          tooth_depth: 0.78,
+          tooth_tipe_angle: 36.83,
+          number_of_slots: 6,
+          sfr1: 0.6,
+          sfr2: 0.5,
+          sfr3: 0.5,
+          sfr4: 0.2,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // Handle the response data here
+          console.log(data);
+          return data;
+        })
+        .catch((error) => {
+          // Handle any errors here
+          console.error(error);
+        });
+    },
+    onSuccess: (data) => {
+      toast("hray");
+      console.log(data, "daaaaaaaaaaaaaaaaaaaa2");
+    },
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      out_dia: "",
+      bore_dia: "",
+      stack_height: "",
+      slot_depth: "",
+      slot_width: "",
+      slot_opening: "",
+      tooth_depth: "",
+      tooth_tipe_angle: "",
+      number_of_slot: "",
+      sfr1: "",
+      sfr2: "",
+      sfr3: "",
+      sfr4: "",
+    },
+    validationSchema: yup.object({
+      out_dia: yup.number().required(),
+      bore_dia: yup.number().required(),
+      stack_height: yup.number().required(),
+      slot_depth: yup.number().required(),
+      slot_width: yup.number().required(),
+      slot_opening: yup.number().required(),
+      tooth_depth: yup.number().required(),
+      tooth_tipe_angle: yup.number().required(),
+      number_of_slot: yup.number().required(),
+      sfr1: yup.number().required(),
+      sfr2: yup.number().required(),
+      sfr3: yup.number().required(),
+      sfr4: yup.number().required(),
+    }),
+    onSubmit: (values) => {
+      toast("submited");
+      console.log(values);
+      mutate(values);
+    },
+  });
+
+  function logg() {}
 
   if (isLoading) {
     return (
@@ -67,7 +147,7 @@ function App() {
     <div className="w-full flex ">
       {/* <button onClick={logg}>logg</button> */}
       {/* Side Bar */}
-      <div className="w-[17%] justify-center border-r-2 border-black h-screen py-5 px-2 flex flex-col ">
+      <div className="xl:w-[27%] w-1/3 justify-between pr-5 border-r-2 border-black items-center h-screen py-5 flex flex-row  ">
         <div className="flex items-center justify-center flex-col 2xl:gap-y-16 xl:gap-y-14 md:gap-10 gap-7">
           <Button
             color="warning"
@@ -126,6 +206,38 @@ function App() {
             Large
           </Button>
         </div>
+        {/* INputs */}
+        <div>
+          <form
+            onSubmit={formik.handleSubmit}
+            className="grid grid-cols-2 gap-x-6  gap-y-3 h-[60%]"
+          >
+            {inputNames.map((item, i) => (
+              <div key={i}>
+                <Input
+                  type="text"
+                  color={"success"}
+                  label={item}
+                  name={item}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values[item]}
+                  // placeholder={item}
+                  // defaultValue="junior@nextui.org"
+                  // className="max-w-[220px]"
+                />
+                {formik.touched[item] && formik.errors[item] ? (
+                  <span className="text-red-600 text-sm font-noraml">
+                    {formik.errors[item]}
+                  </span>
+                ) : null}
+              </div>
+            ))}
+            <Button type="submit" color="success">
+              Success
+            </Button>
+          </form>
+        </div>
       </div>
       {/* Main */}
       <div className="flex-1 flex relative flex-col items-center">
@@ -147,21 +259,6 @@ function App() {
             file
           </p>
         </div>
-        {/* <div>
-          <StlViewer
-            width={900}
-            height={700}
-            url={stdlUrl}
-            // url={file}
-            groundColor="rgb(255, 255, 255)"
-            objectColor="rgb(137, 137, 137)"
-            skyboxColor="rgb(255, 255, 255)"
-            gridLineColor="rgb(0, 0, 0)"
-            lightColor="rgb(255, 255, 255)"
-            volume={setvolume}
-          />
-          {`Volume: ${volume}`}
-        </div> */}
         <div className="w-[60%] flex items-center justify-center  relative h-screen">
           {/* Wrapper */}
           <div
@@ -203,3 +300,51 @@ function App() {
 }
 
 export default App;
+
+// fetch('http://16.16.183.78/new-stator', {
+//   method: 'POST',
+//   headers: {
+//     'Content-Type': 'application/json'
+//   },
+//   body: JSON.stringify({
+//     out_dia: 265,
+//     bore_dia: 192,
+//     stack_height: 300,
+//     slot_depth: 18.15,
+//     slot_width: 3.6,
+//     slot_opening: 1.5,
+//     tooth_depth: 0.78,
+//     tooth_tipe_angle: 36.83,
+//     number_of_slots: 6,
+//     sfr1: 0.6,
+//     sfr2: 0.5,
+//     sfr3: 0.5,
+//     sfr4: 0.2
+//   })
+// })
+//   .then(response => response.blob())
+//   .then(blob => {
+//     // Create a URL for the blob data
+//     const url = URL.createObjectURL(blob);
+
+//     // Create a link element
+//     const link = document.createElement('a');
+//     link.href = url;
+//     link.download = 'stl_file.stl';
+
+//     // Add the link element to the document body
+//     document.body.appendChild(link);
+
+//     // Programmatically click the link to trigger the download
+//     link.click();
+
+//     // Remove the link element
+//     document.body.removeChild(link);
+
+//     // Revoke the URL
+//     URL.revokeObjectURL(url);
+//   })
+//   .catch(error => {
+//     // Handle any errors here
+//     console.error(error);
+//   });
