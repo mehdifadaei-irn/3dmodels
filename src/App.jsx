@@ -19,15 +19,15 @@ const url1 =
 function App() {
   const [dis, setDis] = useState(true);
   const [status, setStatus] = useState("1"); // "" | "1" | "2" | "3" | "4"
-  const [stdlUrl, setStdlUrl] = useState("http://localhost:5000/first");
-  const { data, isLoading, refetch, isSuccess } = useQuery({
-    queryKey: ["start"],
-    queryFn: async () => {
-      const { data } = await axios.get("http://localhost:5000/start");
+  const [stdlUrl, setStdlUrl] = useState("../first.stl");
+  // const { data, isLoading, refetch, isSuccess } = useQuery({
+  //   queryKey: ["start"],
+  //   queryFn: async () => {
+  //     const { data } = await axios.get("http://localhost:5000/start");
 
-      return data;
-    },
-  });
+  //     return data;
+  //   },
+  // });
   const [volume, setvolume] = useState(0);
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -129,16 +129,16 @@ function App() {
 
   function logg() {}
 
-  if (isLoading) {
-    return (
-      <div className="w-screen h-screen flex justify-center items-center">
-        <div className="flex flex-row gap-x-3">
-          <h1 className="underline font-bold text-xl ">Waiting...</h1>
-          <Spinner />
-        </div>
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="w-screen h-screen flex justify-center items-center">
+  //       <div className="flex flex-row gap-x-3">
+  //         <h1 className="underline font-bold text-xl ">Waiting...</h1>
+  //         <Spinner />
+  //       </div>
+  //     </div>
+  //   );
+  // }
   return (
     <div className="w-full flex ">
       {/* <button onClick={logg}>logg</button> */}
