@@ -55,37 +55,33 @@ function App() {
 
   const { mutate } = useMutation({
     mutationFn: async (values) => {
-      fetch("http://16.16.183.78/new-stator", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          out_dia: 265,
-          bore_dia: 192,
-          stack_height: 300,
-          slot_depth: 18.15,
-          slot_width: 3.6,
-          slot_opening: 1.5,
-          tooth_depth: 0.78,
-          tooth_tipe_angle: 36.83,
-          number_of_slots: 6,
-          sfr1: 0.6,
-          sfr2: 0.5,
-          sfr3: 0.5,
-          sfr4: 0.2,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          // Handle the response data here
-          console.log(data);
-          return data;
-        })
-        .catch((error) => {
-          // Handle any errors here
-          console.error(error);
+      try {
+        const response = await fetch("http://16.16.183.78/new-stator", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
         });
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.blob();
+
+        const stlURL = URL.createObjectURL(data);
+
+        setStdlUrl(stlURL);
+        // Log the raw response content
+        console.log("Raw response content:", data);
+
+        return data;
+      } catch (error) {
+        // Handle any errors here
+        console.error(error);
+        throw new Error("Something went wrong");
+      }
     },
     onSuccess: (data) => {
       toast("hray");
@@ -103,7 +99,7 @@ function App() {
       slot_opening: "",
       tooth_depth: "",
       tooth_tipe_angle: "",
-      number_of_slot: "",
+      number_of_slots: "",
       sfr1: "",
       sfr2: "",
       sfr3: "",
@@ -118,7 +114,7 @@ function App() {
       slot_opening: yup.number().required(),
       tooth_depth: yup.number().required(),
       tooth_tipe_angle: yup.number().required(),
-      number_of_slot: yup.number().required(),
+      number_of_slots: yup.number().required(),
       sfr1: yup.number().required(),
       sfr2: yup.number().required(),
       sfr3: yup.number().required(),
@@ -126,7 +122,7 @@ function App() {
     }),
     onSubmit: (values) => {
       toast("submited");
-      console.log(values);
+      // console.log(values);
       mutate(values);
     },
   });

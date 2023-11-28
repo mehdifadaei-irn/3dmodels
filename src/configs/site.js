@@ -7,7 +7,7 @@ export const inputNames = [
   "slot_opening",
   "tooth_depth",
   "tooth_tipe_angle",
-  "number_of_slot",
+  "number_of_slots",
   "sfr1",
   "sfr2",
   "sfr3",
