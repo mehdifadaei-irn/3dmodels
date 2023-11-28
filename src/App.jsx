@@ -143,8 +143,8 @@ function App() {
     <div className="w-full flex ">
       {/* <button onClick={logg}>logg</button> */}
       {/* Side Bar */}
-      <div className="xl:w-[27%] w-1/3 justify-between pr-5 border-r-2 border-black items-center h-screen py-5 flex flex-row  ">
-        <div className="flex items-center justify-center flex-col 2xl:gap-y-16 xl:gap-y-14 md:gap-10 gap-7">
+      <div className="xl:w-[27%] w-1/3 justify-between px-5 border-r-2 border-black items-center h-screen py-5 flex flex-row  ">
+        {/* <div className="flex items-center justify-center flex-col 2xl:gap-y-16 xl:gap-y-14 md:gap-10 gap-7">
           <Button
             color="warning"
             variant="shadow"
@@ -201,7 +201,7 @@ function App() {
           >
             Large
           </Button>
-        </div>
+        </div> */}
         {/* INputs */}
         <div>
           <form
